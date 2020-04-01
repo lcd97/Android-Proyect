@@ -5,5 +5,5 @@
     <string name="login">Ingresar</string>
     <string name="rememberme">Recordar credenciales</string>
     <string name="newAccount">¿No tiene cuenta?</string>
-    <string name="newAccount1">Registrese aquí</string>
+    <string name="newAccount1"><u>Registrese aquí</u></string>
 </resources>
