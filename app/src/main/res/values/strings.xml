@@ -6,4 +6,9 @@
     <string name="rememberme">Recordar credenciales</string>
     <string name="newAccount">¿No tiene cuenta?</string>
     <string name="newAccount1"><u>Registrese aquí</u></string>
+    <string name="passwordConfirm">Confirmar Contraseña</string>
+    <string name="register">Crea tu cuenta</string>
+    <string name="names">Nombre</string>
+    <string name="last_name">Apellidos</string>
+    <string name="id">Cédula de Identidad</string>
 </resources>
