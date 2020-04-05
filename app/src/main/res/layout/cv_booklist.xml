@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CardViewBookList"
+    android:orientation="vertical"
+    android:layout_width="@dimen/cv_width"
+    android:layout_height="@dimen/cv_heigth"
+    app:cardCornerRadius="@dimen/cv_radius">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="149dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        tools:ignore="VectorDrawableCompat" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_below="@+id/imageView2"
+        android:text="TextView"
+        android:gravity="center_horizontal" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="43dp"
+            android:layout_height="29dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:background="@android:drawable/ic_menu_share"
+            android:backgroundTint="@android:color/black" />
+
+    </RelativeLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
