@@ -12,9 +12,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.libraryapp.bean.credenciales;
+import com.example.libraryapp.bean.Credenciales;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,21 +46,20 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences(KEY_EDITOR, MODE_PRIVATE);
 
         //OBTENGO LAS PREFERENCIAS
-        credenciales cred = credenciales.getPreferences(preferences);
+        Credenciales cred = Credenciales.getPreferences(preferences);
 
         //ASIGNACION DE CAMPOS CON LA ULTIMA PREFERENCIA ALMACENADA
         edtUsername.setText(cred.getEmail());
         edtPassword.setText(cred.getPassword());
 
-        if (edtUsername.getText().toString().length() != 0)
-        {
+        //CHECKEAR CHEKBOX SI EXISTEN DATOS
+        if (edtUsername.getText().toString().length() != 0){
             chkRememberMe.setChecked(true);
         }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i = new Intent(MainActivity.this, container.class);
                 startActivity(i);
             }
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         chkRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                credenciales creden = new credenciales();
+                Credenciales creden = new Credenciales();
 
                 if (buttonView.isChecked()) {
                     //IS CHECKED
@@ -87,14 +85,10 @@ public class MainActivity extends AppCompatActivity {
                     creden.setPassword(edtPassword.getText().toString());
 
                     creden.savePreferences(preferences);
-
-                    Toast.makeText(MainActivity.this, "Almacenado", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
+                else{
                     //NOT CHECKED
                     creden.deletePreferences(preferences);
-                    Toast.makeText(MainActivity.this, "No Chequeado", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -104,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private void validator(){
         if (edtUsername.getText().toString().length() == 0 )
         {
+
         }
 
         if (edtPassword.getText().toString().length() == 0 )

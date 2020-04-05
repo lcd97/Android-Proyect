@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import java.io.Serializable;
 
-public class credenciales implements Serializable {
+public class Credenciales implements Serializable {
     private String Email;
     private String Password;
 
@@ -12,11 +12,11 @@ public class credenciales implements Serializable {
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
 
-    public credenciales() {
+    public Credenciales() {
         super();
     }
 
-    public credenciales(String email, String password) {
+    public Credenciales(String email, String password) {
         Email = email;
         Password = password;
     }
@@ -47,8 +47,8 @@ public class credenciales implements Serializable {
     }
 
     //METODO PARA OBTENER LAS PREFERENCIAS
-    public static credenciales getPreferences(SharedPreferences preferences) {
-        credenciales credenciales = new credenciales();
+    public static Credenciales getPreferences(SharedPreferences preferences) {
+        Credenciales credenciales = new Credenciales();
 
         credenciales.setEmail(preferences.getString(EMAIL,null));
         credenciales.setPassword(preferences.getString(PASSWORD,null));
