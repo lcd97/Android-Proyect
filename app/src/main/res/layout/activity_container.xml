@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".container">
 
+    <!--
+    <include layout="@layout/actionbar_toolbar"></include>
+    -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

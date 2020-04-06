@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.example.libraryapp.Fragments.bookListFragment;
 import com.example.libraryapp.Fragments.categoriesFragment;
@@ -18,6 +19,7 @@ public class container extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+
 
         BottomNavigationView bottonNav = findViewById(R.id.bottom_nav);
         bottonNav.setOnNavigationItemSelectedListener(navListener);

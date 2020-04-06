@@ -1,0 +1,9 @@
+<network-security-config xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">
+            manoamigalibrary.somee.com
+        </domain>
+    </domain-config>
+
+</network-security-config>

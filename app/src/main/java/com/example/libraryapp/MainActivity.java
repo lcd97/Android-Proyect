@@ -1,27 +1,39 @@
 package com.example.libraryapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.libraryapp.SOAP.sw_SOAP;
 import com.example.libraryapp.bean.Credenciales;
+import com.example.libraryapp.bean.Login;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnLogin;
-    TextView txtRegister;
-    EditText edtUsername, edtPassword;
-    CheckBox chkRememberMe;
-    ImageButton imgFacebook, imgInstagram, imgTwitter;
+    public static boolean errored = false;
+    public boolean isLogging = false;
+
+    public Button btnLogin;
+    public TextView txtRegister;
+    public EditText edtUsername, edtPassword;
+    public CheckBox chkRememberMe;
+    public ImageButton imgFacebook, imgInstagram, imgTwitter;
+
+    ProgressBar webservicePG;
 
     //DECLARACION DE CONSTANTE LLAVE PARA LAS PREFERENCIAS
     public static final String KEY_EDITOR = "llave.editor";
@@ -46,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences(KEY_EDITOR, MODE_PRIVATE);
 
         //OBTENGO LAS PREFERENCIAS
-        Credenciales cred = Credenciales.getPreferences(preferences);
+        final Credenciales cred = Credenciales.getPreferences(preferences);
 
         //ASIGNACION DE CAMPOS CON LA ULTIMA PREFERENCIA ALMACENADA
         edtUsername.setText(cred.getEmail());
@@ -60,8 +72,17 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, container.class);
-                startActivity(i);
+               if (!vacio()) {
+                   //LLAMAR LA TAREA
+                   new loginAsyncTask().execute();
+               }else{
+                   new AlertDialog.Builder(MainActivity.this)
+                           .setTitle("Error")
+                           .setMessage("Campos requeridos no pueden quedar vacíos")
+                           .setPositiveButton("Reintentar", null)
+                           .setCancelable(false)
+                           .show();
+               }
             }
         });
 
@@ -72,38 +93,72 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        //EVENTO PARA ALMACENAR O BORRAR LAS CREDENCIALES
-        chkRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Credenciales creden = new Credenciales();
-
-                if (buttonView.isChecked()) {
-                    //IS CHECKED
-                    creden.setEmail(edtUsername.getText().toString());
-                    creden.setPassword(edtPassword.getText().toString());
-
-                    creden.savePreferences(preferences);
-                }
-                else{
-                    //NOT CHECKED
-                    creden.deletePreferences(preferences);
-                }
-            }
-        });
     }
 
     //METODO DE VALIDACION DE CAMPOS
-    private void validator(){
-        if (edtUsername.getText().toString().length() == 0 )
-        {
-
+    private boolean vacio(){
+        boolean band = false;
+        if (edtUsername.getText().toString().length() <= 0 ) {
+            edtUsername.setError("Campo Requerido");
+            band = true;
         }
 
-        if (edtPassword.getText().toString().length() == 0 )
-        {
-
+        if (edtPassword.getText().toString().length() <= 0 ) {
+            edtPassword.setError("Campo Requerido");
+            band = true;
         }
+        return band;
     }
-}
+
+    private class loginAsyncTask extends AsyncTask<Void, Void, Login> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Login doInBackground(Void... voids) {
+            Login l = new Login();
+            l = sw_SOAP.login(edtUsername.getText().toString(), edtPassword.getText().toString());
+            return l;
+        }
+
+        @Override
+        protected void onPostExecute(Login l) {
+            //SI EL LOGIN ES DIFERENTE DE VACIO
+            if (l != null) {
+                //SI ESTA LOGGEADO
+                if (l.isLogged()) {
+                    //MANDARLO AL ACTIVITY PRINCIPAL
+                    startActivity(new Intent(MainActivity.this, container.class));
+
+                    //EVENTO PARA ALMACENAR O BORRAR LAS CREDENCIALES
+                    chkRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            Credenciales creden = new Credenciales();
+
+                            if (buttonView.isChecked()) {
+                                //IS CHECKED
+                                creden.setEmail(edtUsername.getText().toString());
+                                creden.setPassword(edtPassword.getText().toString());
+
+                                creden.savePreferences(preferences);
+                            } else {
+                                //NOT CHECKED
+                                creden.deletePreferences(preferences);
+                            }
+                        }
+                    });
+                    //MENSAJE DE BIENVENIDA
+                    Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
+                } else {
+                    //MENSAJE DE ERROR
+                    Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
+                }
+            }else
+                Toast.makeText(MainActivity.this, "Error en el servicio", Toast.LENGTH_SHORT).show();
+        }//FIN ON-POST-EXECUTE
+    }//FIN CLASE INTERNA LOGIN
+}//FIN MAIN
