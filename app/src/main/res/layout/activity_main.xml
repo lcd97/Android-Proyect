@@ -8,6 +8,8 @@
     android:background="#e0e8e8"
     tools:context=".MainActivity">
 
+    <include layout="@layout/actionbar_toolbar"></include>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"

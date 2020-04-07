@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
     tools:context=".container">
 
-    <!--
     <include layout="@layout/actionbar_toolbar"></include>
-    -->
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

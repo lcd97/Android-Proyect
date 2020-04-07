@@ -2,6 +2,7 @@ package com.example.libraryapp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,8 @@ import com.example.libraryapp.SOAP.sw_SOAP;
 import com.example.libraryapp.bean.Credenciales;
 import com.example.libraryapp.bean.Login;
 
+import static android.graphics.Color.WHITE;
+
 public class MainActivity extends AppCompatActivity {
 
     public static boolean errored = false;
@@ -40,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
     //VARIABLE PARA ALMACENAR LA PREFERENCIA
     private SharedPreferences preferences;
 
+    private Credenciales creden = new Credenciales();
+
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         imgFacebook = findViewById(R.id.imageButton);
         imgInstagram = findViewById(R.id.imageButton2);
         imgTwitter = findViewById(R.id.imageButton3);
+
+        toolbar = findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Biblioteca");
+        toolbar.setTitleTextColor(WHITE);
 
         //CREAR LAS PREFERENCIAS
         preferences = getSharedPreferences(KEY_EDITOR, MODE_PRIVATE);
@@ -93,6 +105,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        chkRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked()) {
+                    //IS CHECKED
+                    creden.setEmail(edtUsername.getText().toString());
+                    creden.setPassword(edtPassword.getText().toString());
+
+                    creden.savePreferences(preferences);
+                } else {
+                    //NOT CHECKED
+                    creden.deletePreferences(preferences);
+                }
+            }
+        });
     }
 
     //METODO DE VALIDACION DE CAMPOS
@@ -130,35 +158,21 @@ public class MainActivity extends AppCompatActivity {
             if (l != null) {
                 //SI ESTA LOGGEADO
                 if (l.isLogged()) {
+
                     //MANDARLO AL ACTIVITY PRINCIPAL
                     startActivity(new Intent(MainActivity.this, container.class));
 
-                    //EVENTO PARA ALMACENAR O BORRAR LAS CREDENCIALES
-                    chkRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            Credenciales creden = new Credenciales();
-
-                            if (buttonView.isChecked()) {
-                                //IS CHECKED
-                                creden.setEmail(edtUsername.getText().toString());
-                                creden.setPassword(edtPassword.getText().toString());
-
-                                creden.savePreferences(preferences);
-                            } else {
-                                //NOT CHECKED
-                                creden.deletePreferences(preferences);
-                            }
-                        }
-                    });
                     //MENSAJE DE BIENVENIDA
                     Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
                 } else {
                     //MENSAJE DE ERROR
                     Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
+                    //SI EXISTE ALGUN ERROR EN EL LOGIN SE ELMIMINAN LAS CREDENCIALES
+                    creden.deletePreferences(preferences);
                 }
             }else
                 Toast.makeText(MainActivity.this, "Error en el servicio", Toast.LENGTH_SHORT).show();
+
         }//FIN ON-POST-EXECUTE
     }//FIN CLASE INTERNA LOGIN
 }//FIN MAIN
