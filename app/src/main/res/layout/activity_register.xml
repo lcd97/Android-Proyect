@@ -39,7 +39,7 @@
             android:maxLength="14"
             android:digits="0123456789*,qwertzuiopasdfghjklyxcvbnm"
             android:ems="10"
-            android:hint="@string/id" />
+            android:hint="@string/id_reg" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

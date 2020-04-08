@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -59,6 +61,36 @@ public class MainActivity extends AppCompatActivity {
         imgFacebook = findViewById(R.id.imageButton);
         imgInstagram = findViewById(R.id.imageButton2);
         imgTwitter = findViewById(R.id.imageButton3);
+
+        imgFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String YourPageURL = "https://www.facebook.com/";
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YourPageURL));
+
+                startActivity(browserIntent);
+            }
+        });
+
+        imgTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String YourPageURL = "https://www.twitter.com/";
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YourPageURL));
+
+                startActivity(browserIntent);
+            }
+        });
+
+        imgInstagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String YourPageURL = "https://www.instagram.com/";
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YourPageURL));
+
+                startActivity(browserIntent);
+            }
+        });
 
         toolbar = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
@@ -171,6 +203,17 @@ public class MainActivity extends AppCompatActivity {
 
                     progressDialog.dismiss();
 
+                    if (chkRememberMe.isChecked()) {
+                        //IS CHECKED
+                        creden.setEmail(edtUsername.getText().toString());
+                        creden.setPassword(edtPassword.getText().toString());
+
+                        creden.savePreferences(preferences);
+                    } else {
+                        //NOT CHECKED
+                        creden.deletePreferences(preferences);
+                    }
+
                     //MENSAJE DE BIENVENIDA
                     Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
                 } else {
@@ -180,10 +223,11 @@ public class MainActivity extends AppCompatActivity {
                     //SI EXISTE ALGUN ERROR EN EL LOGIN SE ELMIMINAN LAS CREDENCIALES
                     creden.deletePreferences(preferences);
                 }
-            }else
+            }else {
                 progressDialog.dismiss();
-            Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+            }
         }//FIN ON-POST-EXECUTE
     }//FIN CLASE INTERNA LOGIN
+
 }//FIN MAIN
