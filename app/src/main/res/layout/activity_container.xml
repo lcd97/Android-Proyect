@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-    tools:context=".container">
+    tools:context=".containerActivity">
 
-    <include layout="@layout/actionbar_toolbar"></include>
+    <include
+        android:id="@+id/encabezado"
+        layout="@layout/actionbar_toolbar"></include>
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/encabezado"
         android:layout_above="@id/bottom_nav"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -18,9 +18,15 @@
     <!--STRING ELEMENTOS DEL BOTTOM BAR-->
     <string name="tab_bookList">Libros</string>
     <string name="tab_category">Categorias</string>
-    <string name="tab_rentalClient">Rentas</string>
+    <string name="tab_rentalClient">Rentas Pendientes</string>
     <string name="title_activity_dashboard">dashboard</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+
+    <string name="passwordChange">Cambiar contraseña</string>
+    <string name="Oldpassword">Contraseña vieja</string>
+    <string name="Newpassword">Nueva Contraseña</string>
+    <string name="listbook">Lista de Libros</string>
 </resources>

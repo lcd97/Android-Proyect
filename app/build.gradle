@@ -40,4 +40,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //DECLARACION
     implementation 'com.google.android.material:material:1.1.0'
+    //LIBRERIA CIRCLE IMAGEVIEW
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

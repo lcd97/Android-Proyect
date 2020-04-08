@@ -6,5 +6,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="cv_heigth">200dp</dimen>
     <dimen name="cv_width">150dp</dimen>
-    <dimen name="cv_radius">4dp</dimen>
+    <dimen name="cv_radius">10dp</dimen>
+    <dimen name="cv_elevation">4dp</dimen>
 </resources>

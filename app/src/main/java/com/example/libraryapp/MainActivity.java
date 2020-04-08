@@ -8,14 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     public EditText edtUsername, edtPassword;
     public CheckBox chkRememberMe;
     public ImageButton imgFacebook, imgInstagram, imgTwitter;
-
-    ProgressBar webservicePG;
 
     //DECLARACION DE CONSTANTE LLAVE PARA LAS PREFERENCIAS
     public static final String KEY_EDITOR = "llave.editor";
@@ -65,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Biblioteca");
         toolbar.setTitleTextColor(WHITE);
+
+        edtPassword.setText("");
+        edtPassword.setText("");
 
         //CREAR LAS PREFERENCIAS
         preferences = getSharedPreferences(KEY_EDITOR, MODE_PRIVATE);
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         txtRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, register.class);
+                Intent i = new Intent(MainActivity.this, registerActivity.class);
                 startActivity(i);
             }
         });
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class loginAsyncTask extends AsyncTask<Void, Void, Login> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -158,9 +156,10 @@ public class MainActivity extends AppCompatActivity {
             if (l != null) {
                 //SI ESTA LOGGEADO
                 if (l.isLogged()) {
-
                     //MANDARLO AL ACTIVITY PRINCIPAL
-                    startActivity(new Intent(MainActivity.this, container.class));
+                    Intent intent = new Intent(MainActivity.this, containerActivity.class);
+                    intent.putExtra("email", edtUsername.getText().toString());
+                    startActivity(intent);
 
                     //MENSAJE DE BIENVENIDA
                     Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     creden.deletePreferences(preferences);
                 }
             }else
-                Toast.makeText(MainActivity.this, "Error en el servicio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
 
         }//FIN ON-POST-EXECUTE
     }//FIN CLASE INTERNA LOGIN

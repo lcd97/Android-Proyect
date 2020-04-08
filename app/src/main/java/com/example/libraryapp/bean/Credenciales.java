@@ -60,4 +60,8 @@ public class Credenciales implements Serializable {
     public static void deletePreferences(SharedPreferences preferences){
         preferences.edit().clear().commit();
     }
+
+    public static void deletePassword(SharedPreferences preferences){
+        preferences.edit().remove("PASSWORD").commit();
+    }
 }

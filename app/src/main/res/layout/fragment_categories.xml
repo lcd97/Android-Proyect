@@ -3,15 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_bright"
+    android:background="#F5F5F5"
     android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-    tools:context=".Fragments.categoriesFragment">
+    tools:context=".Fragments.categoriesFragment"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/tab_category"
-        android:textSize="70sp"/>
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="40dp"
+        android:textAlignment="center"
+        android:text="@string/tab_bookList"
+        android:gravity="center_horizontal" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@id/textView4"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

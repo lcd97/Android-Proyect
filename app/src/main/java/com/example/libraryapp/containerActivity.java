@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +17,18 @@ import android.widget.Toast;
 import com.example.libraryapp.Fragments.bookListFragment;
 import com.example.libraryapp.Fragments.categoriesFragment;
 import com.example.libraryapp.Fragments.rentalsFragment;
+import com.example.libraryapp.bean.Credenciales;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class container extends AppCompatActivity {
+public class containerActivity extends AppCompatActivity {
 
     public Toolbar toolbar;
+    public String email;
+
+    //DECLARACION DE CONSTANTE LLAVE PARA LAS PREFERENCIAS
+    public static final String KEY_EDITOR = "llave.editor";
+    //VARIABLE PARA ALMACENAR LA PREFERENCIA
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,11 @@ public class container extends AppCompatActivity {
         //MANDAR POR DEFECTO EL FRAGMENT PRINCIPAL DE LA APP
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                new bookListFragment()).commit();
+
+        //CREAR LAS PREFERENCIAS
+        preferences = getSharedPreferences(KEY_EDITOR, MODE_PRIVATE);
+
+        email = getIntent().getExtras().getString("email");
     }
 
     @Override
@@ -51,10 +64,16 @@ public class container extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.profile:
-                Toast.makeText(getBaseContext(), "ACTIVIDAD PERFIL", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
+                intent.putExtra("email", email);
+                startActivity(intent);
                 break;
 
             case R.id.signOut:
+                //BORRAR LAS CREDENCIALES DE PASSWORD DEL LOGIN
+                Credenciales credenciales = new Credenciales();
+                credenciales.deletePassword(preferences);
+
                 startActivity(new Intent(getBaseContext(), MainActivity.class));
                 break;
         }
