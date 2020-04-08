@@ -297,4 +297,57 @@ public final class sw_SOAP {
         return band;
     }
 
+    public static ArrayList<Book> bookArrayListFilter(int categoria){
+        ArrayList<Book> books = new ArrayList<Book>();
+
+        final String METHOD_NAME = "BookListByCategory"; //METODO A EJECUTAR
+        final String SOAP_ACTION = "http://manoamigalibrary.somee.com/BookListByCategory"; //CONCAT NAMESPACE + METHOD NAME
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty("CategoryId", categoria);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        envelope.dotNet = true;
+
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+        try {
+            //this is the actual part that will call the webservice
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            // Get the SoapResult from the envelope body.
+
+            SoapObject resultHead = (SoapObject) envelope.bodyIn;
+            SoapObject result = (SoapObject) resultHead.getProperty(0);
+
+            SoapObject tempData =(SoapObject) result.getProperty("BookWS");
+
+            if (result != null) {
+                //Get the first property and change the label text
+                for (int currentBook = 0; currentBook < result.getPropertyCount(); currentBook++) {
+
+                    SoapObject temp =(SoapObject) result.getProperty(currentBook);
+
+                    Book b = new Book();
+
+                    b.setId(Integer.parseInt(temp.getProperty(0).toString()));
+                    b.setCodigo(temp.getProperty("Codigo").toString());
+                    b.setTitulo(temp.getProperty("Titulo").toString());
+                    b.setISBN(temp.getProperty("ISBN").toString());
+                    b.setAutor(temp.getProperty("Autor").toString());
+                    b.setPortada(temp.getProperty("Portada").toString().getBytes());
+                    //b.setAdquisicion(Date.valueOf(temp.getProperty("Adquisicion").toString()));
+                    b.setDescripcion(temp.getProperty("Descripcion").toString());
+                    b.setNumeroCopia(Integer.parseInt(temp.getProperty("MateriaId").toString()));
+
+                    books.add(b);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
 }//FIN DE LA CLASE

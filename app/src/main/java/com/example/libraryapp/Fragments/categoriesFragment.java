@@ -2,6 +2,7 @@ package com.example.libraryapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.libraryapp.Adapters.BooksAdapter;
 import com.example.libraryapp.Adapters.CategoriesAdapter;
+import com.example.libraryapp.FilterBooksActivity;
 import com.example.libraryapp.R;
 import com.example.libraryapp.SOAP.sw_SOAP;
 import com.example.libraryapp.bean.Book;
@@ -86,8 +88,11 @@ public class categoriesFragment extends Fragment {
                     adapter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getContext(), "tocaste " +
-                                    categories.get(recyclerView.getChildAdapterPosition(v)).getDescripcion(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(), FilterBooksActivity.class);
+                            intent.putExtra("categoriaId", categories.get(recyclerView.getChildAdapterPosition(v)).getId());
+                            startActivity(intent);
+                            /*Toast.makeText(getContext(), "tocaste " +
+                                    categories.get(recyclerView.getChildAdapterPosition(v)).getDescripcion(), Toast.LENGTH_SHORT).show();*/
                         }
                     });
                     recyclerView.setAdapter(adapter);
