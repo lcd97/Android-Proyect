@@ -1,5 +1,6 @@
 package com.example.libraryapp.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -23,6 +24,9 @@ public class rentalsFragment extends Fragment {
     TextView rentas;
     View rootView;
 
+    ProgressDialog progressDialog;
+
+
     public rentalsFragment() {
         // Required empty public constructor
     }
@@ -34,6 +38,13 @@ public class rentalsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_rentals, container, false);
 
         rentas = rootView.findViewById(R.id.textView6);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Cargando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         new RentalAsyncTask().execute();
 
         return rootView;
@@ -50,6 +61,7 @@ public class rentalsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -57,6 +69,8 @@ public class rentalsFragment extends Fragment {
             super.onPostExecute(s);
 
             rentas.setText("No posee alquileres pendientes");
+
+            progressDialog.dismiss();
         }
     }
 }

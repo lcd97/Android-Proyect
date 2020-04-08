@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,17 +27,23 @@ import com.example.libraryapp.SOAP.sw_SOAP;
 import com.example.libraryapp.bean.Customer;
 import com.example.libraryapp.bean.Login;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.graphics.Color.WHITE;
 
 public class ProfileActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     Button btnPassword;
-    String email;
+    String email, pass, old;
     TextView txtNombre, txtCodigo;
     ImageView img;
+    CircleImageView foto;
 
-    EditText edtOldPass, edtNewPass, edtNewConfirm;
+    EditText edtOldPass, edtNewPass;
+
+    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,20 @@ public class ProfileActivity extends AppCompatActivity {
         txtCodigo = findViewById(R.id.textView8);
         txtNombre = findViewById(R.id.textView5);
         img = findViewById(R.id.profile_image);
+        foto = findViewById(R.id.imagechange);
+
+        progressDialog = new ProgressDialog(ProfileActivity.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Cargando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        foto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfileActivity.this, "¡Muy pronto!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         email = getIntent().getExtras().getString("email");
 
@@ -72,23 +93,26 @@ public class ProfileActivity extends AppCompatActivity {
                 builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        progressDialog = new ProgressDialog(ProfileActivity.this);
+                        progressDialog.setCanceledOnTouchOutside(false);
+                        progressDialog.setMessage("Cargando");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+
                         //llamar al servicio
                         edtNewPass = view.findViewById(R.id.newPass);
                         edtOldPass = view.findViewById(R.id.oldPass);
-                        edtNewConfirm = view.findViewById(R.id.newPassConfirmed);
+
+                        pass = edtNewPass.getText().toString();
+                        old = edtOldPass.getText().toString();
 
                         if (!vacio()) {
                             if (!longitud()) {
-                                if (edtNewPass.getText().toString() != edtNewConfirm.getText().toString()) {
-                                    edtNewConfirm.setError("Contraseña no coincide");
-                                    edtNewPass.setError("Contraseña no coincide");
-                                } else {
-                                    new PassAsyncTask().execute();
-                                }
+                                new PassAsyncTask().execute();
                             }
                         }else{
                             edtNewPass.setError("Debe contener más de 7 dígitos");
-                            edtNewConfirm.setError("Debe contener más de 7 dígitos");
                         }
                     }
                 });
@@ -114,18 +138,13 @@ public class ProfileActivity extends AppCompatActivity {
             band = true;
         }
 
-        if (edtNewConfirm.getText().toString().length() <= 0 ) {
-            edtNewConfirm.setError("Campo Requerido");
-            band = true;
-        }
-
         return band;
     }
 
     private boolean longitud(){
         boolean band = false;
 
-        if (edtNewPass.getText().toString().length() <= 7 || edtNewConfirm.getText().toString().length() <= 7 ) {
+        if (edtNewPass.getText().toString().length() <= 7) {
             band = true;
         }
 
@@ -153,6 +172,8 @@ public class ProfileActivity extends AppCompatActivity {
             if(l.getFoto() == null){
                 img.setImageResource(R.drawable.user_profile);
             }
+
+            progressDialog.dismiss();
         }//FIN ON-POST-EXECUTE
     }//FIN CLASE INTERNA LOGIN
 
@@ -170,11 +191,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
             else
                 Toast.makeText(ProfileActivity.this, "Error. Intentelo de nuevo", Toast.LENGTH_SHORT).show();
+
+            progressDialog.dismiss();
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return sw_SOAP.PasswordChange(email, edtOldPass.getText().toString(), edtNewPass.getText().toString());
+            return sw_SOAP.PasswordChange(email, old, pass);
         }
     }
 

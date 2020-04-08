@@ -1,7 +1,9 @@
 package com.example.libraryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import com.example.libraryapp.SOAP.sw_SOAP;
 import com.example.libraryapp.bean.Login;
 import com.example.libraryapp.bean.Register;
 
+import static android.graphics.Color.WHITE;
+
 public class registerActivity extends AppCompatActivity {
 
     public static boolean errored = false;
@@ -21,6 +25,9 @@ public class registerActivity extends AppCompatActivity {
 
     Button btnLogin;
     TextView txtCedula, txtNombre, txtApellido, txtEmail, txtContraseña, txtContraseñaconfirm;
+
+    Toolbar toolbar;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +42,30 @@ public class registerActivity extends AppCompatActivity {
         txtContraseña = findViewById(R.id.editText5);
         txtContraseñaconfirm = findViewById(R.id.editText6);
 
+        toolbar = findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Registro");
+        toolbar.setTitleTextColor(WHITE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(registerActivity.this);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setMessage("Cargando");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 new RegisterAsyncTask().execute();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return false;
     }
 
     private class RegisterAsyncTask extends AsyncTask<Void, Void, Register> {
@@ -76,6 +101,8 @@ public class registerActivity extends AppCompatActivity {
                 }
             }else
                 Toast.makeText(registerActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+
+            progressDialog.dismiss();
 
         }//FIN ON-POST-EXECUTE
     }//FIN CLASE INTERNA LOGIN

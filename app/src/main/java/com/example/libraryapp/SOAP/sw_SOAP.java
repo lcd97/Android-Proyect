@@ -2,6 +2,7 @@ package com.example.libraryapp.SOAP;
 
 import com.example.libraryapp.MainActivity;
 import com.example.libraryapp.bean.Book;
+import com.example.libraryapp.bean.Category;
 import com.example.libraryapp.bean.Customer;
 import com.example.libraryapp.bean.Login;
 import com.example.libraryapp.bean.Register;
@@ -169,6 +170,52 @@ public final class sw_SOAP {
         }
 
         return books;
+    }
+
+    public static ArrayList<Category> CategoryArrayList(){
+        ArrayList<Category> categories = new ArrayList<Category>();
+
+        final String METHOD_NAME = "BookCategory"; //METODO A EJECUTAR
+        final String SOAP_ACTION = "http://manoamigalibrary.somee.com/BookCategory"; //CONCAT NAMESPACE + METHOD NAME
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        envelope.dotNet = true;
+
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+        try {
+            //this is the actual part that will call the webservice
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            // Get the SoapResult from the envelope body.
+
+            SoapObject resultHead = (SoapObject) envelope.bodyIn;
+            SoapObject result = (SoapObject) resultHead.getProperty(0);
+
+            SoapObject tempData =(SoapObject) result.getProperty("CategoryWS");
+
+            if (result != null) {
+                //Get the first property and change the label text
+                for (int currentCategory = 0; currentCategory < result.getPropertyCount(); currentCategory++) {
+
+                    SoapObject temp =(SoapObject) result.getProperty(currentCategory);
+
+                    Category b = new Category();
+
+                    b.setId(Integer.parseInt(temp.getProperty(0).toString()));
+                    b.setCodigo(temp.getProperty("Codigo").toString());
+                    b.setDescripcion(temp.getProperty("Descripcion").toString());
+
+                    categories.add(b);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return categories;
     }
 
     public static Customer CustomerData(String Email){

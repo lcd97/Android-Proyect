@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Credenciales creden = new Credenciales();
 
     Toolbar toolbar;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                if (!vacio()) {
                    //LLAMAR LA TAREA
+                   progressDialog = new ProgressDialog(MainActivity.this);
+                   progressDialog.setCanceledOnTouchOutside(false);
+                   progressDialog.setMessage("Cargando");
+                   progressDialog.setCancelable(false);
+                   progressDialog.show();
                    new loginAsyncTask().execute();
                }else{
                    new AlertDialog.Builder(MainActivity.this)
@@ -161,15 +169,19 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("email", edtUsername.getText().toString());
                     startActivity(intent);
 
+                    progressDialog.dismiss();
+
                     //MENSAJE DE BIENVENIDA
                     Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
                 } else {
+                    progressDialog.dismiss();
                     //MENSAJE DE ERROR
-                    Toast.makeText(MainActivity.this, l.getMensaje(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Error en credenciales. Intentelo de nuevo", Toast.LENGTH_SHORT).show();
                     //SI EXISTE ALGUN ERROR EN EL LOGIN SE ELMIMINAN LAS CREDENCIALES
                     creden.deletePreferences(preferences);
                 }
             }else
+                progressDialog.dismiss();
             Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
 
         }//FIN ON-POST-EXECUTE
