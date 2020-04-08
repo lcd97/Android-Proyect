@@ -57,10 +57,50 @@ public class registerActivity extends AppCompatActivity {
                 progressDialog.setMessage("Cargando");
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-                new RegisterAsyncTask().execute();
+
+                if(!vacio()) {
+                    if (txtCedula.getText().toString().length() == 14) {
+                        new RegisterAsyncTask().execute();
+                    } else {
+                        progressDialog.dismiss();
+                        txtCedula.setError("La cantidad mínima es de 14 dígitos");
+                    }
+                }
+                else
+                    progressDialog.dismiss();
             }
         });
     }
+
+    public boolean vacio(){
+        boolean band = false;
+        if(txtNombre.getText().toString().length() <= 0){
+            txtNombre.setError("Campo requerido");
+            band = true;
+        }
+
+        if(txtApellido.getText().toString().length() <= 0){
+            txtApellido.setError("Campo requerido");
+            band = true;
+        }
+
+        if(txtEmail.getText().toString().length() <= 0){
+            txtEmail.setError("Campo requerido");
+            band = true;
+        }
+
+        if(txtContraseña.getText().toString().length() <= 0){
+            txtContraseña.setError("Campo requerido");
+            band = true;
+        }
+
+        if(txtContraseñaconfirm.getText().toString().length() <= 0){
+            txtContraseñaconfirm.setError("Campo requerido");
+            band = true;
+        }
+            return band;
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
